@@ -49,7 +49,7 @@ const verifyToken = async (req, res, next) => {
 
 async function run() {
     try {
-        await client.connect()
+        // await client.connect()
 
         const database = client.db("my-kitchen")
         const allRecipeCollection = database.collection("recipe")
