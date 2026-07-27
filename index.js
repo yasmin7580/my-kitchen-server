@@ -12,7 +12,6 @@ app.use(express.json())
 
 
 
-
 const uri = process.env.MONGODB_URI;
 
 const client = new MongoClient(uri, {
@@ -93,8 +92,6 @@ async function run() {
 
 
         // delete api
-
-
         app.delete("/recipe/:id", async (req, res) => {
             const { id } = req.params
             const query = { _id: new ObjectId(id) }
