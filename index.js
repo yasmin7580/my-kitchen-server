@@ -54,7 +54,7 @@ async function run() {
 
         const database = client.db("my-kitchen")
         const allRecipeCollection = database.collection("recipe")
-        const recipesCollection = database.collection("my-recipe")
+
 
 
 
@@ -79,6 +79,28 @@ async function run() {
             res.send(result);
         });
 
+        // update api
+        app.patch("/recipes/:id", async (req, res) => {
+            const { id } = req.params
+            const data = req.body
+            const query = { _id: new ObjectId(id) }
+            const update = {
+                $set: data
+            }
+            const result = await allRecipeCollection.updateOne(query, update)
+            res.send(result)
+        })
+
+
+        // delete api
+
+
+        app.delete("/recipe/:id", async (req, res) => {
+            const { id } = req.params
+            const query = { _id: new ObjectId(id) }
+            const result = await allRecipeCollection.deleteOne(query)
+            res.send(result)
+        })
 
 
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
