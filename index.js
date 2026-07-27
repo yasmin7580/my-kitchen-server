@@ -44,28 +44,7 @@ const verifyToken = async (req, res, next) => {
         return res.status(401).json({ msg: "Unauthorized" })
     }
 }
-// const verifyRole = async (req, res, next) => {
-//     const authHeader = req.headers.authorization;
-//     if (!authHeader || !authHeader.startsWith("Bearer")) {
-//         return res.status(401).json({ msg: "Unauthorized" })
-//     }
-//     const token = authHeader.split(" ")[1]
-//     console.log(token)
-//     if (!token) {
-//         return res.status(401).json({ msg: "Unauthorized" })
-//     }
-//     try {
-//         const { payload } = await jwtVerify(token, JWKS)
-//         console.log(payload)
-//         if (payload.role === "founder") {
-//             return next()
-//         }
-//         res.status(401).json({ message: "Unauthorized" })
-//     } catch (error) {
-//         console.log(error);
-//         return res.status(401).json({ msg: "Unauthorized" })
-//     }
-// }
+
 
 
 
@@ -73,10 +52,34 @@ async function run() {
     try {
         await client.connect()
 
-        const database = client.db("my-kitchen_db")
-       
-      
-      
+        const database = client.db("my-kitchen")
+        const allRecipeCollection = database.collection("recipe")
+        const recipesCollection = database.collection("my-recipe")
+
+
+
+        // all recipe api
+
+        app.get("/recipes", async (req, res) => {
+            const result = await allRecipeCollection.find().toArray()
+            res.send(result)
+        })
+
+        app.post("/recipes", async (req, res) => {
+            const recipe = req.body
+            const result = await allRecipeCollection.insertOne(recipe)
+            res.send(result)
+        })
+
+
+        // my recipe api
+        app.get("/my-recipes", async (req, res) => {
+            const userEmail = req.query
+            const result = await recipesCollection.find(userEmail).toArray();
+            res.send(result);
+        });
+
+
 
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
